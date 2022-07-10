@@ -1,8 +1,12 @@
+import { add } from "./moduleA";
+
 console.log("this is a experiment module");
+
+console.log(add(1, 2));
 
 // this comment is new
 export default {
   name: "Experiment",
-  version: '0.0.1',
-  something: "this is a update"
+  version: "1.0.0",
+  something: "this is a update",
 };
