@@ -43,6 +43,7 @@ jobs:
           git clean -ffdx
           git checkout gh-pages
           cp -r ../pages/* .
+          ls
           git config user.name action
           git config user.email action@github.com
           git add .
