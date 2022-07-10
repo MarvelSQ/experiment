@@ -1,0 +1,19 @@
+{
+  "name": "@marvelsq/experiment",
+  "version": "0.0.1",
+  "description": "personal experiment",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarvelSQ/experiment.git"
+  },
+  "author": "MarvelSQ <sun1993hlj@hotmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MarvelSQ/experiment/issues"
+  },
+  "homepage": "https://github.com/MarvelSQ/experiment#readme"
+}
