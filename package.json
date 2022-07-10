@@ -5,6 +5,10 @@
   "main": "lib/index.js",
   "module": "esm/index.js",
   "browser": "lib/index.js",
+  "files": [
+    "esm",
+    "cjs"
+  ],
   "scripts": {
     "build:esm": "tsc --target es6 --module es2015 --outDir esm",
     "build:cjs": "tsc --target es6 --module commonjs --outDir cjs",
