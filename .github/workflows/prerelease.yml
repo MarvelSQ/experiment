@@ -33,7 +33,7 @@ jobs:
       - name: publish
         run: |
           npm run build
-          npm version prerelease --preid=${{ GITHUB_REF_NAME }} && npm publish --tag=${{ GITHUB_REF_NAME }}
+          npm version prerelease --preid=${{ github.ref_name }} && npm publish --tag=${{ github.ref_name }}
         
       - name: sync build
         run: |
