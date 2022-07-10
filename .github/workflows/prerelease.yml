@@ -38,6 +38,8 @@ jobs:
           git config user.email action@github.com
           npm run build
           npm version prerelease --preid=${{ github.ref_name }} && npm publish --tag=${{ github.ref_name }}
+        env:
+          NPM_TOKEN: ${{ secrets.NPMJS_PUBLISH_TOKEN }}
 
       - name: sync build
         run: |
