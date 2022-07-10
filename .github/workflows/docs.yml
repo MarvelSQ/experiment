@@ -29,10 +29,26 @@ jobs:
       
       - name: install dependencies
         run: pnpm i
+        
+      - name: initial gh-pages
+        run: |
+          cd docs/dist
+          git init
+          git remote add origin '${{ github.repositoryUrl }}'
+          git fetch
+          git checkout -t origin/gh-pages
+          cd ../..
 
       - name: build docs
         run: npm run docs:build
         
-      - name: log path
-        run: pwd
+      - name: deploy
+        run: |
+          cd docs/dist
+          git config user.name action
+          git config user.email action@github.com
+          git add .
+          git commmit -m "update docs"
+          git push
+
         
