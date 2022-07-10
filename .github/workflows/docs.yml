@@ -40,6 +40,7 @@ jobs:
         
       - name: deploy
         run: |
+          git clean -ffdx
           git checkout gh-pages
           cp -r ../pages/ pwd
           git config user.name action
