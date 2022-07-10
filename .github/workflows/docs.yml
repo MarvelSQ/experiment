@@ -33,7 +33,7 @@ jobs:
       - name: build docs
         run: |
           npm run docs:build
-          cd -r docs/dist ../pages
+          cp -r docs/dist ../pages
         
       - name: deploy
         run: |
