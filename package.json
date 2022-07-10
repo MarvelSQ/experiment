@@ -2,8 +2,15 @@
   "name": "@marvelsq/experiment",
   "version": "0.0.1",
   "description": "personal experiment",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "module": "esm/index.js",
+  "browser": "lib/index.js",
   "scripts": {
+    "build:esm": "tsc --target es6 --module es2015 --outDir esm",
+    "build:cjs": "tsc --target es6 --module commonjs --outDir cjs",
+    "build": "npm run build:esm && npm run build:cjs",
+    "docs:build": "vite build --config docs/vite.config.js",
+    "docs:dev": "vite --config docs/vite.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +22,9 @@
   "bugs": {
     "url": "https://github.com/MarvelSQ/experiment/issues"
   },
-  "homepage": "https://github.com/MarvelSQ/experiment#readme"
+  "homepage": "https://github.com/MarvelSQ/experiment#readme",
+  "devDependencies": {
+    "typescript": "^4.7.4",
+    "vite": "^2.9.14"
+  }
 }
