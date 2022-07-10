@@ -42,7 +42,7 @@ jobs:
         run: |
           git clean -ffdx
           git checkout gh-pages
-          cp -r ../pages/ pwd
+          cp -r ../pages/ .
           git config user.name action
           git config user.email action@github.com
           git add .
