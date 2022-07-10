@@ -33,3 +33,6 @@ jobs:
       - name: build docs
         run: npm run docs:build
         
+      - name: log path
+        run: pwd
+        
