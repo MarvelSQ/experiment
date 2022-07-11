@@ -44,3 +44,4 @@ jobs:
       - name: sync build
         run: |
           git push
+          git push --tag
