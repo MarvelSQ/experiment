@@ -1,10 +1,12 @@
-name: Deploy Docs
+name: publish
 
 on:
-  push:
-    branches: ["master"]
-  pull_request:
-    branches: ["master"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version"
+        required: True
+        type: string
 
 jobs:
   build:
@@ -16,8 +18,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
@@ -34,21 +34,17 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPMJS_PUBLISH_TOKEN }}
 
-      - name: build docs
+      - name: publish
         run: |
-          npm run docs:build
-          cp -r docs/dist ../pages
+          git config user.name action
+          git config user.email action@github.com
+          npm run build
+          echo generating version ${{ inputs.version }}
+          npm version ${{ inputs.version }} && npm publish
         env:
           NPM_TOKEN: ${{ secrets.NPMJS_PUBLISH_TOKEN }}
 
-      - name: deploy
+      - name: sync build
         run: |
-          git clean -ffdx
-          git checkout gh-pages
-          cp -r ../pages/* .
-          ls
-          git config user.name action
-          git config user.email action@github.com
-          git add .
-          git commit -m "update docs"
           git push
+          git push --tag
