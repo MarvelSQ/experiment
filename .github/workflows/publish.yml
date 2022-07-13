@@ -39,6 +39,7 @@ jobs:
           git config user.name action
           git config user.email action@github.com
           npm run build
+          echo generating version {{ inputs.version }}
           npm version {{ inputs.version }} && npm publish
         env:
           NPM_TOKEN: ${{ secrets.NPMJS_PUBLISH_TOKEN }}
