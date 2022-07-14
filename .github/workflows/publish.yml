@@ -5,7 +5,10 @@ on:
     inputs:
       version:
         description: "Version"
-        required: True
+        required: true
+        type: string
+      channel:
+        description: "Channel"
         type: string
 
 jobs:
@@ -40,7 +43,7 @@ jobs:
           git config user.email action@github.com
           npm run build
           echo generating version ${{ inputs.version }}
-          npm version ${{ inputs.version }} && npm publish
+          npm version ${{ inputs.version }} && npm publish --tag=${{ inputs.channel }}
         env:
           NPM_TOKEN: ${{ secrets.NPMJS_PUBLISH_TOKEN }}
 
