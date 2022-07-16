@@ -63,6 +63,7 @@ jobs:
           git push
 
       - run: gh issue comment $ISSUE --body "Deployed to gh-pages"
+        if: ${{ github.event.type != 'closed' }}
         env:
           ISSUE: ${{ github.event.pull_request.html_url }}
 
