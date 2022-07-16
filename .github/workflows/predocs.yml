@@ -54,7 +54,7 @@ jobs:
           subdir="pr/${PR_TITLE//(\/| )/_}"
           echo "Deploying PR: $PR_TITLE"
           mkdir -p $subdir
-          cp -r ../pages/* "pr/$subdir"
+          cp -r ../pages/* $subdir
           ls
           git config user.name action
           git config user.email action@github.com
@@ -73,7 +73,7 @@ jobs:
           git checkout gh-pages
           git pull
           subdir="pr/${PR_TITLE//(\/| )/_}"
-          rm -rf subdir
+          rm -rf $subdir
           git add .
           git commit -m "clean docs from pr #{{ github.event.pull_request.number }}"
           git push
