@@ -6,7 +6,7 @@ on:
     types: ["opend", "synchronize", "closed"]
 
 jobs:
-  deloplyment:
+  deployment:
     runs-on: ubuntu-latest
     env:
       PR_TITLE: ${{ github.event.pull_request.title }}
