@@ -79,7 +79,7 @@ jobs:
             /repos/MarvelSQ/experiment/pages >> pages.json
           url=$(grep -o '"html_url":"[^"]*' pages.json | grep -o '[^"]*$')
           gh pr comment $PR_NUMBER --body "Deployed to gh-pages ${url}pr/$subdir"
-          echo "::set-output name=url::$url"
+          echo "::set-output name=url::${url}pr/$subdir"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
