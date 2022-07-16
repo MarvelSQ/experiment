@@ -29,13 +29,13 @@ jobs:
           version: 6.x
 
       - name: install dependencies
-        if: ${{ github.event.type != "closed" }}
+        if: ${{ github.event.type != 'closed' }}
         run: pnpm i
         env:
           NPM_TOKEN: ${{ secrets.NPMJS_PUBLISH_TOKEN }}
 
       - name: build docs
-        if: ${{ github.event.type != "closed" }}
+        if: ${{ github.event.type != 'closed' }}
         run: |
           npm run docs:build
           cp -r docs/dist ../pages
@@ -43,7 +43,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPMJS_PUBLISH_TOKEN }}
 
       - name: deploy
-        if: ${{ github.event.type != "closed" }}
+        if: ${{ github.event.type != 'closed' }}
         run: |
           git clean -ffdx
           git checkout gh-pages
@@ -58,7 +58,7 @@ jobs:
           git push
 
       - name: clean
-        if: ${{ github.event.type == "closed" }}
+        if: ${{ github.event.type == 'closed' }}
         run: |
           git clean -ffdx
           git checkout gh-pages
