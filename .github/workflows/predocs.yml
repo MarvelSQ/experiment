@@ -54,7 +54,7 @@ jobs:
           subdir=${PR_TITLE////_}
           subdir=${subdir// /_}
           echo "Deploying PR: $PR_TITLE to pr/$subdir"
-          mkdir -p $subdir
+          mkdir -p pr/$subdir
           cp -r ../pages/* pr/$subdir
           ls
           git config user.name action
