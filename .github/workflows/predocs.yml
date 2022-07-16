@@ -51,10 +51,10 @@ jobs:
           git clean -ffdx
           git checkout gh-pages
           git pull
-          subdir="pr/${PR_TITLE//(\/| )/_}"
-          echo "Deploying PR: $PR_TITLE to $subdir"
+          subdir=${PR_TITLE//(\/| )/_}
+          echo "Deploying PR: $PR_TITLE to pr/$subdir"
           mkdir -p $subdir
-          cp -r ../pages/* $subdir
+          cp -r ../pages/* pr/$subdir
           ls
           git config user.name action
           git config user.email action@github.com
@@ -74,8 +74,8 @@ jobs:
           git clean -ffdx
           git checkout gh-pages
           git pull
-          subdir="pr/${PR_TITLE//(\/| )/_}"
-          rm -rf $subdir
+          subdir=${PR_TITLE//(\/| )/_}
+          rm -rf pr/$subdir
           git add .
-          git commit -m "clean docs from pr #{{ github.event.pull_request.number }}"
+          git commit -m "clean docs from pr #$PR_NUMBER"
           git push
