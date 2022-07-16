@@ -67,6 +67,8 @@ jobs:
       - name: "comment on pr"
         if: ${{ github.event.type != 'closed' }}
         run: |
+          subdir=${PR_TITLE////_}
+          subdir=${subdir// /_}
           gh api \
             -H "Accept: application/vnd.github+json" \
             /repos/MarvelSQ/experiment/pages >> pages.json
