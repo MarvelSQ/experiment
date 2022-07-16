@@ -1,0 +1,69 @@
+name: Deploy Docs
+
+on:
+  pull_request:
+    branches: ["master"]
+    types: ["opend", "synchronize", "closed"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: using pnpm
+        uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 6.x
+
+      - name: install dependencies
+        if: github.event.pull_request.type != "closed"
+        run: pnpm i
+        env:
+          NPM_TOKEN: ${{ secrets.NPMJS_PUBLISH_TOKEN }}
+
+      - name: build docs
+        if: github.event.pull_request.type != "closed"
+        run: |
+          npm run docs:build
+          cp -r docs/dist ../pages
+        env:
+          NPM_TOKEN: ${{ secrets.NPMJS_PUBLISH_TOKEN }}
+
+      - name: deploy
+        if: github.event.pull_request.type != "closed"
+        run: |
+          git clean -ffdx
+          git checkout gh-pages
+          git pull
+          mkdir "pr-${{ github.event.pull_request.title }}"
+          cp -r ../pages/* "pr-${{ github.event.pull_request.title }}"
+          ls
+          git config user.name action
+          git config user.email action@github.com
+          git add .
+          git commit -m "update docs from pr #{{ github.event.pull_request.number }}"
+          git push
+
+      - name: clean
+        if: github.event.pull_request.type == "closed"
+        run: |
+          git clean -ffdx
+          git checkout gh-pages
+          git pull
+          rm -rf "pr-${{ github.event.pull_request.title }}"
+          git add .
+          git commit -m "clean docs from pr #{{ github.event.pull_request.number }}"
+          git push
