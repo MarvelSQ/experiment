@@ -67,10 +67,11 @@ jobs:
       - name: "comment on pr"
         if: ${{ github.event.type != 'closed' }}
         run: |
-          gh pr comment $PR_NUMBER --body "Deployed to gh-pages"
           gh api \
             -H "Accept: application/vnd.github+json" \
-            /repos/MarvelSQ/experiment/pages
+            /repos/MarvelSQ/experiment/pages >> pages.json
+          url=$(grep -o '"html_url":"[^"]*' pages.json | grep -o '[^"]*$')
+          gh pr comment $PR_NUMBER --body "Deployed to gh-pages ${url}pr/$subdir"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
