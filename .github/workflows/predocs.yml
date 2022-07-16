@@ -67,6 +67,8 @@ jobs:
       - name: "comment on pr"
         if: ${{ github.event.type != 'closed' }}
         run: |
+          echo $depoloyment
+          echo $environment_url
           subdir=${PR_TITLE////_}
           subdir=${subdir// /_}
           gh api \
@@ -74,6 +76,7 @@ jobs:
             /repos/MarvelSQ/experiment/pages >> pages.json
           url=$(grep -o '"html_url":"[^"]*' pages.json | grep -o '[^"]*$')
           gh pr comment $PR_NUMBER --body "Deployed to gh-pages ${url}pr/$subdir"
+          environment_url="${url}pr/$subdir"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
