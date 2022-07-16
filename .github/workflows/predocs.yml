@@ -48,8 +48,9 @@ jobs:
           git clean -ffdx
           git checkout gh-pages
           git pull
-          mkdir "pr-${{ github.event.pull_request.title }}"
-          cp -r ../pages/* "pr-${{ github.event.pull_request.title }}"
+          subdir="pr-${{ github.event.pull_request.title }}"
+          mkdir ${subdir//\//_}
+          cp -r ../pages/* ${subdir//\//_}
           ls
           git config user.name action
           git config user.email action@github.com
@@ -63,7 +64,8 @@ jobs:
           git clean -ffdx
           git checkout gh-pages
           git pull
-          rm -rf "pr-${{ github.event.pull_request.title }}"
+          subdir="pr-${{ github.event.pull_request.title }}"
+          rm -rf ${subdir//\//_}
           git add .
           git commit -m "clean docs from pr #{{ github.event.pull_request.number }}"
           git push
