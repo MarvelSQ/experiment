@@ -8,6 +8,7 @@ on:
 jobs:
   deployment:
     runs-on: ubuntu-latest
+    environment: gh-pages
     env:
       PR_TITLE: ${{ github.event.pull_request.title }}
       PR_NUMBER: ${{ github.event.number }}
