@@ -66,6 +66,7 @@ jobs:
         if: ${{ github.event.type != 'closed' }}
         env:
           ISSUE: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: clean
         if: ${{ github.event.type == 'closed' }}
