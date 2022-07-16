@@ -49,6 +49,7 @@ jobs:
           git checkout gh-pages
           git pull
           subdir="pr-${{ github.event.pull_request.title }}"
+          echo "Deploying PR: ${{ github.event.pull_request.title }}"
           mkdir ${subdir//\//_}
           cp -r ../pages/* ${subdir//\//_}
           ls
