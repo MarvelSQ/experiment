@@ -1,4 +1,5 @@
 import main from "../../src";
+import "./index.css";
 
 const root = document.createElement("div");
 
