@@ -8,7 +8,9 @@ on:
 jobs:
   deployment:
     runs-on: ubuntu-latest
-    environment: gh-pages
+    environment:
+      name: gh-pages
+      url: ${{ steps.deploy_environment.outputs.url }}
     env:
       PR_TITLE: ${{ github.event.pull_request.title }}
       PR_NUMBER: ${{ github.event.number }}
@@ -65,6 +67,7 @@ jobs:
           git push
 
       - name: "comment on pr"
+        id: deploy_environment
         if: ${{ github.event.type != 'closed' }}
         run: |
           echo $depoloyment
@@ -76,7 +79,7 @@ jobs:
             /repos/MarvelSQ/experiment/pages >> pages.json
           url=$(grep -o '"html_url":"[^"]*' pages.json | grep -o '[^"]*$')
           gh pr comment $PR_NUMBER --body "Deployed to gh-pages ${url}pr/$subdir"
-          environment_url="${url}pr/$subdir"
+          echo "::set-output name=url::$url"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
