@@ -22,6 +22,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        run: |
+          git config user.name action
+          git config user.email action@github.com
         with:
           fetch-depth: 0
 
@@ -61,8 +64,6 @@ jobs:
           mkdir -p pr/$subdir
           cp -r ../pages/* pr/$subdir
           ls
-          git config user.name action
-          git config user.email action@github.com
           git add .
           git commit -m "update docs from pr #$PR_NUMBER"
           git push
@@ -71,7 +72,6 @@ jobs:
         id: deploy_environment
         if: ${{ env.PR_TYPE != 'closed' }}
         run: |
-          echo "${{ github.event.pull_request.payload }}"
           subdir=${PR_TITLE////_}
           subdir=${subdir// /_}
           gh api \
