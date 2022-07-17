@@ -83,7 +83,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: clean
-        if: ${{ env.PR_TYPE === 'closed' }}
+        if: ${{ env.PR_TYPE == 'closed' }}
         run: |
           git clean -ffdx
           git checkout gh-pages
