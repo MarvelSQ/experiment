@@ -3,7 +3,7 @@ name: Deploy Preview Docs
 on:
   pull_request:
     branches: ["master"]
-    types: ["opend", "synchronize", "closed"]
+    types: ["opened", "synchronize", "closed"]
 
 jobs:
   deployment:
