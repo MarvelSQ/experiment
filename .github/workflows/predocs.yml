@@ -14,7 +14,7 @@ jobs:
     env:
       PR_TITLE: ${{ github.event.pull_request.title }}
       PR_NUMBER: ${{ github.event.number }}
-      PR_TYPE: ${{ github.event.pull_request.payload.type }}
+      PR_TYPE: ${{ github.event.action }}
 
     strategy:
       matrix:
@@ -36,13 +36,13 @@ jobs:
           version: 6.x
 
       - name: install dependencies
-        if: $PR_TYPE != 'closed'
+        if: ${{ env.PR_TYPE != 'closed' }}
         run: pnpm i
         env:
           NPM_TOKEN: ${{ secrets.NPMJS_PUBLISH_TOKEN }}
 
       - name: build docs
-        if: $PR_TYPE != 'closed'
+        if: ${{ env.PR_TYPE != 'closed' }}
         run: |
           npm run docs:build
           cp -r docs/dist ../pages
@@ -50,7 +50,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPMJS_PUBLISH_TOKEN }}
 
       - name: deploy
-        if: $PR_TYPE != 'closed'
+        if: ${{ env.PR_TYPE != 'closed' }}
         run: |
           git clean -ffdx
           git checkout gh-pages
@@ -69,7 +69,7 @@ jobs:
 
       - name: "comment on pr"
         id: deploy_environment
-        if: $PR_TYPE != 'closed'
+        if: ${{ env.PR_TYPE != 'closed' }}
         run: |
           echo "${{ github.event.pull_request.payload }}"
           subdir=${PR_TITLE////_}
@@ -83,7 +83,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: clean
-        if: $PR_TYPE == 'closed'
+        if: ${{ env.PR_TYPE === 'closed' }}
         run: |
           git clean -ffdx
           git checkout gh-pages
