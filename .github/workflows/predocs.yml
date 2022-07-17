@@ -71,6 +71,7 @@ jobs:
         id: deploy_environment
         if: ${{ PR_TYPE != 'closed' }}
         run: |
+          echo "${{ github.event.pull_request.payload }}"
           subdir=${PR_TITLE////_}
           subdir=${subdir// /_}
           gh api \
