@@ -71,7 +71,7 @@ jobs:
           git commit -m "update docs from pr #$PR_TITLE"
           git push
         env:
-          DEPLOY_PATH: ${{ stpes.init_environment.outputs.deploy_path }}
+          DEPLOY_PATH: ${{ steps.init_environment.outputs.deploy_path }}
 
       - name: init environment url
         id: deploy_environment
@@ -84,7 +84,7 @@ jobs:
           echo "::set-output name=url::${url}${DEPLOY_PATH}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEPLOY_PATH: ${{ stpes.init_environment.outputs.deploy_path }}
+          DEPLOY_PATH: ${{ steps.init_environment.outputs.deploy_path }}
 
       - name: clean preview docs
         if: ${{ env.PR_TYPE == 'closed' }}
@@ -97,4 +97,4 @@ jobs:
           git commit -m "clean docs from pr #$PR_TITLE"
           git push
         env:
-          DEPLOY_PATH: ${{ stpes.init_environment.outputs.deploy_path }}
+          DEPLOY_PATH: ${{ steps.init_environment.outputs.deploy_path }}
