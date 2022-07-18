@@ -17,6 +17,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: init git user
+        run: |
+          git config user.name action
+          git config user.email action@github.com
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -42,11 +47,9 @@ jobs:
       - name: deploy
         run: |
           git clean -ffdx
+          git fetch
           git checkout gh-pages
           cp -r ../pages/* .
-          ls
-          git config user.name action
-          git config user.email action@github.com
           git add .
           git commit -m "update docs"
           git push
