@@ -35,10 +35,13 @@ jobs:
         with:
           version: 6.x
 
-      - name: init git user
+      - id: init_environment
         run: |
           git config user.name action
           git config user.email action@github.com
+          subdir=${PR_TITLE////_}
+          subdir="pr/${subdir// /_}"
+          echo "::set-output name=deploy_path::${subdir}"
 
       - name: install dependencies
         if: ${{ env.PR_TYPE != 'closed' }}
@@ -54,45 +57,44 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPMJS_PUBLISH_TOKEN }}
 
-      - name: deploy
+      - name: deploy preview docs
         if: ${{ env.PR_TYPE != 'closed' }}
         run: |
           git clean -ffdx
           git checkout gh-pages
           git pull
-          subdir=${PR_TITLE////_}
-          subdir=${subdir// /_}
-          echo "Deploying PR: $PR_TITLE to pr/$subdir"
-          mkdir -p pr/$subdir
-          cp -r ../pages/* pr/$subdir
+          echo "Deploying PR: ${PR_TITLE} to ${DEPLOY_PATH}"
+          mkdir -p ${DEPLOY_PATH}
+          cp -r ../pages/* ${DEPLOY_PATH}
           ls
           git add .
-          git commit -m "update docs from pr #$PR_NUMBER"
+          git commit -m "update docs from pr #$PR_TITLE"
           git push
+        env:
+          DEPLOY_PATH: ${{ stpes.init_environment.outputs.deploy_path }}
 
-      - name: "comment on pr"
+      - name: init environment url
         id: deploy_environment
         if: ${{ env.PR_TYPE != 'closed' }}
         run: |
-          subdir=${PR_TITLE////_}
-          subdir=${subdir// /_}
           gh api \
             -H "Accept: application/vnd.github+json" \
             /repos/MarvelSQ/experiment/pages >> pages.json
           url=$(grep -o '"html_url":"[^"]*' pages.json | grep -o '[^"]*$')
-          echo "::set-output name=url::${url}pr/$subdir"
+          echo "::set-output name=url::${url}${DEPLOY_PATH}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEPLOY_PATH: ${{ stpes.init_environment.outputs.deploy_path }}
 
-      - name: clean
+      - name: clean preview docs
         if: ${{ env.PR_TYPE == 'closed' }}
         run: |
           git clean -ffdx
           git checkout gh-pages
           git pull
-          subdir=${PR_TITLE////_}
-          subdir=${subdir// /_}
-          rm -rf pr/$subdir
+          rm -rf ${DEPLOY_PATH}
           git add .
-          git commit -m "clean docs from pr #$PR_NUMBER"
+          git commit -m "clean docs from pr #$PR_TITLE"
           git push
+        env:
+          DEPLOY_PATH: ${{ stpes.init_environment.outputs.deploy_path }}
