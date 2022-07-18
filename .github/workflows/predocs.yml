@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: gh-pages
-      url: ${{ steps.deploy_environment.outputs.url }}
+      url: ${{ steps.init_environment.outputs.url }}
     env:
       PR_TITLE: ${{ github.event.pull_request.title }}
       PR_NUMBER: ${{ github.event.number }}
@@ -35,13 +35,24 @@ jobs:
         with:
           version: 6.x
 
+      - id: accquire_deployment
+        run: |
+          response=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            /repos/MarvelSQ/experiment/pages)
+          echo "::set-output name=deploy_info::$response"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - id: init_environment
         run: |
           git config user.name action
           git config user.email action@github.com
           subdir=${PR_TITLE////_}
           subdir="pr/${subdir// /_}"
+          html_url=${{ fromJSON(steps.accquire_deployment.outputs.deploy_info).html_url }}
           echo "::set-output name=deploy_path::${subdir}"
+          echo "::set-output name=url::${html_url}${subdir}"
 
       - name: install dependencies
         if: ${{ env.PR_TYPE != 'closed' }}
@@ -71,19 +82,6 @@ jobs:
           git commit -m "update docs from pr #$PR_TITLE"
           git push
         env:
-          DEPLOY_PATH: ${{ steps.init_environment.outputs.deploy_path }}
-
-      - name: init environment url
-        id: deploy_environment
-        if: ${{ env.PR_TYPE != 'closed' }}
-        run: |
-          response=$(gh api \
-            -H "Accept: application/vnd.github+json" \
-            /repos/MarvelSQ/experiment/pages)
-          html_url=${{ fromJson(steps.deploy_environment.env.response).html_url }}
-          echo "::set-output name=url::${html_url}${DEPLOY_PATH}"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEPLOY_PATH: ${{ steps.init_environment.outputs.deploy_path }}
 
       - name: clean preview docs
