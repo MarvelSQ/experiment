@@ -80,7 +80,7 @@ jobs:
           response=$(gh api \
             -H "Accept: application/vnd.github+json" \
             /repos/MarvelSQ/experiment/pages)
-          html_url=${{ fromJson(response).html_url }}
+          html_url=${{ fromJson(env.response).html_url }}
           echo "::set-output name=url::${html_url}${DEPLOY_PATH}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
