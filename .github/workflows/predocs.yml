@@ -81,7 +81,7 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             /repos/MarvelSQ/experiment/pages)
           html_url=${{ fromJson(response).html_url }}
-          echo "::set-output name=html_url::${url}${DEPLOY_PATH}"
+          echo "::set-output name=url::${html_url}${DEPLOY_PATH}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEPLOY_PATH: ${{ steps.init_environment.outputs.deploy_path }}
