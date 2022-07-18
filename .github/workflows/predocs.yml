@@ -3,11 +3,18 @@ name: Deploy Preview Docs
 on:
   pull_request:
     branches: ["master"]
-    types: ["opend", "synchronize", "closed"]
+    types: ["opened", "synchronize", "closed"]
 
 jobs:
-  build:
+  deployment:
     runs-on: ubuntu-latest
+    environment:
+      name: gh-pages
+      url: ${{ steps.init_environment.outputs.url }}
+    env:
+      PR_TITLE: ${{ github.event.pull_request.title }}
+      PR_NUMBER: ${{ github.event.number }}
+      PR_TYPE: ${{ github.event.action }}
 
     strategy:
       matrix:
@@ -28,42 +35,64 @@ jobs:
         with:
           version: 6.x
 
+      - id: accquire_deployment
+        run: |
+          response=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            /repos/MarvelSQ/experiment/pages)
+          echo "::set-output name=deploy_info::$response"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: init_environment
+        run: |
+          git config user.name action
+          git config user.email action@github.com
+          subdir=${PR_TITLE////_}
+          subdir="pr/${subdir// /_}"
+          html_url=${{ fromJSON(steps.accquire_deployment.outputs.deploy_info).html_url }}
+          echo "::set-output name=deploy_path::${subdir}"
+          echo "::set-output name=url::${html_url}${subdir}"
+
       - name: install dependencies
-        if: ${{ github.event.type != "closed" }}
+        if: ${{ env.PR_TYPE != 'closed' }}
         run: pnpm i
         env:
           NPM_TOKEN: ${{ secrets.NPMJS_PUBLISH_TOKEN }}
 
       - name: build docs
-        if: ${{ github.event.type != "closed" }}
+        if: ${{ env.PR_TYPE != 'closed' }}
         run: |
           npm run docs:build
           cp -r docs/dist ../pages
         env:
           NPM_TOKEN: ${{ secrets.NPMJS_PUBLISH_TOKEN }}
 
-      - name: deploy
-        if: ${{ github.event.type != "closed" }}
+      - name: deploy preview docs
+        if: ${{ env.PR_TYPE != 'closed' }}
         run: |
           git clean -ffdx
           git checkout gh-pages
           git pull
-          mkdir "pr-${{ github.event.pull_request.title }}"
-          cp -r ../pages/* "pr-${{ github.event.pull_request.title }}"
+          echo "Deploying PR: ${PR_TITLE} to ${DEPLOY_PATH}"
+          mkdir -p ${DEPLOY_PATH}
+          cp -r ../pages/* ${DEPLOY_PATH}
           ls
-          git config user.name action
-          git config user.email action@github.com
           git add .
-          git commit -m "update docs from pr #{{ github.event.pull_request.number }}"
+          git commit -m "update docs from pr #$PR_TITLE"
           git push
+        env:
+          DEPLOY_PATH: ${{ steps.init_environment.outputs.deploy_path }}
 
-      - name: clean
-        if: ${{ github.event.type == "closed" }}
+      - name: clean preview docs
+        if: ${{ env.PR_TYPE == 'closed' }}
         run: |
           git clean -ffdx
           git checkout gh-pages
           git pull
-          rm -rf "pr-${{ github.event.pull_request.title }}"
+          rm -rf ${DEPLOY_PATH}
           git add .
-          git commit -m "clean docs from pr #{{ github.event.pull_request.number }}"
+          git commit -m "clean docs from pr #$PR_TITLE"
           git push
+        env:
+          DEPLOY_PATH: ${{ steps.init_environment.outputs.deploy_path }}
