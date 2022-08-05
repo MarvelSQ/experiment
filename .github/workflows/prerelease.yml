@@ -25,7 +25,7 @@ jobs:
       - name: using pnpm
         uses: pnpm/action-setup@v2.2.2
         with:
-          version: 6.x
+          version: 7.x
 
       - name: install dependencies
         run: pnpm i
