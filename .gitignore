@@ -5,3 +5,5 @@ docs/dist
 # build
 cjs
 esm
+# vscode
+.vscode
