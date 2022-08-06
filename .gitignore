@@ -7,3 +7,5 @@ cjs
 esm
 # vscode
 .vscode
+# test coverage
+coverage
