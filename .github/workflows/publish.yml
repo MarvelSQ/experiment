@@ -48,6 +48,7 @@ jobs:
           git config user.email action@github.com
           npm run build
           echo generating version ${{ inputs.version }}
+          npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
           npm version ${{ inputs.version }} && npm publish --tag=${{ inputs.channel }}
         env:
           NPM_TOKEN: ${{ secrets.NPMJS_PUBLISH_TOKEN }}
