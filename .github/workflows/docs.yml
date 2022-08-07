@@ -34,15 +34,11 @@ jobs:
 
       - name: install dependencies
         run: pnpm i
-        env:
-          NPM_TOKEN: ${{ secrets.NPMJS_PUBLISH_TOKEN }}
 
       - name: build docs
         run: |
           npm run docs:build
           cp -r docs/dist ../pages
-        env:
-          NPM_TOKEN: ${{ secrets.NPMJS_PUBLISH_TOKEN }}
 
       - name: deploy
         run: |
