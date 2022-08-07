@@ -34,13 +34,9 @@ jobs:
 
       - name: install dependencies
         run: pnpm i
-        env:
-          NPM_TOKEN: ${{ secrets.NPMJS_PUBLISH_TOKEN }}
 
       - name: run test script
         run: npm test
-        env:
-          NPM_TOKEN: ${{ secrets.NPMJS_PUBLISH_TOKEN }}
 
       - name: publish
         run: |
