@@ -4,7 +4,7 @@ on:
   push:
     branches: ["master"]
   pull_request:
-    types: ["opened", "synchronize"]
+    types: ["opened", "synchronize", "labeled", "unlabeled"]
 
 jobs:
   test:
@@ -12,6 +12,8 @@ jobs:
     strategy:
       matrix:
         node-version: [14.x]
+    env:
+      PR_UPDATE_DEPS: ${{ contains(github.event.pull_request.labels.*.name, 'dependencies') }}
 
     steps:
       - uses: actions/checkout@v3
@@ -29,7 +31,7 @@ jobs:
           version: 7.x
 
       - name: install dependencies
-        run: pnpm i
+        run: pnpm i --no-frozen-lockfile=${PR_UPDATE_DEPS}
 
       - name: run test script
         run: npm test
