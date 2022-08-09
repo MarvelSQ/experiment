@@ -3,7 +3,7 @@ name: Deploy Preview Docs
 on:
   pull_request:
     branches: ["master"]
-    types: ["opened", "synchronize", "closed"]
+    types: ["opened", "synchronize", "closed", "labeled", "unlabeled"]
 
 jobs:
   deployment:
@@ -44,6 +44,11 @@ jobs:
           echo "::set-output name=deploy_info::$response"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Condition Step
+        if: $PR_UPDATE_DEPS
+        run: |
+          echo labels contains dependencies
 
       - id: init_environment
         run: |
