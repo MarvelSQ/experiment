@@ -46,7 +46,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Condition Step
-        if: ${{ env.PR_UPDATE_DEPS == true }}
+        if: ${{ env.PR_UPDATE_DEPS }}
         run: |
           echo labels contains dependencies
 
