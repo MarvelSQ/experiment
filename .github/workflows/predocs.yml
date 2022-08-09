@@ -46,7 +46,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Condition Step
-        if: ${{ env.PR_UPDATE_DEPS }}
+        if: ${{ contains(github.event.pull_request.labels.*.name, 'dependencies') }}
         run: |
           echo labels contains dependencies
 
@@ -63,7 +63,7 @@ jobs:
 
       - name: install dependencies
         if: ${{ env.PR_TYPE != 'closed' }}
-        run: pnpm i
+        run: pnpm i --no-frozen-lockfile=$PR_UPDATE_DEPS
 
       - name: build docs
         if: ${{ env.PR_TYPE != 'closed' }}
