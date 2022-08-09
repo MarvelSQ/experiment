@@ -47,7 +47,7 @@ jobs:
 
       - id: init_environment
         run: |
-          echo 'update dependencies ${PR_UPDATE_DEPS}'
+          echo 'update dependencies $PR_UPDATE_DEPS'
           git config user.name action
           git config user.email action@github.com
           subdir=${PR_TITLE////_}
