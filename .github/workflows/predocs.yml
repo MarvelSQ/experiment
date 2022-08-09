@@ -75,6 +75,7 @@ jobs:
         if: ${{ env.PR_TYPE != 'closed' }}
         run: |
           git clean -ffdx
+          git reset --hard
           git checkout gh-pages
           git pull
           echo "Deploying PR: ${PR_TITLE} to ${DEPLOY_PATH}"
@@ -87,10 +88,18 @@ jobs:
         env:
           DEPLOY_PATH: ${{ steps.init_environment.outputs.deploy_path }}
 
+      - name: patch update
+        if: ${{ env.PR_TYPE == 'closed' && github.event.pull_request.merged }}
+        run: |
+          git add pnpm-lock.yaml
+          git commit -m "update pnpm-lock.yaml"
+          git push
+
       - name: clean preview docs
         if: ${{ env.PR_TYPE == 'closed' }}
         run: |
           git clean -ffdx
+          git reset --hard
           git checkout gh-pages
           git pull
           rm -rf ${DEPLOY_PATH}
