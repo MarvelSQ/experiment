@@ -15,6 +15,7 @@ jobs:
       PR_TITLE: ${{ github.event.pull_request.title }}
       PR_NUMBER: ${{ github.event.number }}
       PR_TYPE: ${{ github.event.action }}
+      PR_LABELS: $${{ github.event.pull_request.labels }}
 
     strategy:
       matrix:
@@ -46,6 +47,7 @@ jobs:
 
       - id: init_environment
         run: |
+          echo $PR_LABELS
           git config user.name action
           git config user.email action@github.com
           subdir=${PR_TITLE////_}
