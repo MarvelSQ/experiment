@@ -63,7 +63,7 @@ jobs:
 
       - name: install dependencies
         if: ${{ env.PR_TYPE != 'closed' }}
-        run: pnpm i --no-frozen-lockfile=$PR_UPDATE_DEPS
+        run: pnpm i --no-frozen-lockfile=${PR_UPDATE_DEPS}
 
       - name: build docs
         if: ${{ env.PR_TYPE != 'closed' }}
