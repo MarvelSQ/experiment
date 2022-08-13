@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PR_UPDATE_DEPS: ${{ contains(github.event.pull_request.labels.*.name, 'dependencies') }}
+      HEAD_REF: ${{ github.event.pull_request.head.ref }}
 
     strategy:
       matrix:
@@ -43,4 +44,4 @@ jobs:
           git config user.email action@github.com
           git add pnpm-lock.yaml
           git commit -m "build: update pnpm lock file"
-          git push origin HEAD:$GITHUB_REF_NAME
+          git push origin HEAD:$HEAD_REF
