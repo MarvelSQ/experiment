@@ -16,6 +16,7 @@ jobs:
       PR_NUMBER: ${{ github.event.number }}
       PR_TYPE: ${{ github.event.action }}
       PR_UPDATE_DEPS: ${{ contains(github.event.pull_request.labels.*.name, 'dependencies') }}
+      HEAD_REF: ${{ github.event.pull_request.head.ref }}
 
     strategy:
       matrix:
@@ -49,6 +50,7 @@ jobs:
         if: ${{ contains(github.event.pull_request.labels.*.name, 'dependencies') }}
         run: |
           echo labels contains dependencies
+          echo $HEAD_REF
 
       - id: init_environment
         run: |
