@@ -3,7 +3,7 @@ name: Deploy Preview Docs
 on:
   pull_request:
     branches: ["master"]
-    types: ["opened", "synchronize", "closed"]
+    types: ["opened", "synchronize", "closed", "labeled", "unlabeled"]
 
 jobs:
   deployment:
@@ -15,6 +15,8 @@ jobs:
       PR_TITLE: ${{ github.event.pull_request.title }}
       PR_NUMBER: ${{ github.event.number }}
       PR_TYPE: ${{ github.event.action }}
+      PR_UPDATE_DEPS: ${{ contains(github.event.pull_request.labels.*.name, 'dependencies') }}
+      HEAD_REF: ${{ github.event.pull_request.head.ref }}
 
     strategy:
       matrix:
@@ -44,8 +46,14 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Condition Step
+        if: ${{ contains(github.event.pull_request.labels.*.name, 'dependencies') }}
+        run: |
+          echo labels contains dependencies
+
       - id: init_environment
         run: |
+          echo update dependencies $PR_UPDATE_DEPS
           git config user.name action
           git config user.email action@github.com
           subdir=${PR_TITLE////_}
@@ -56,7 +64,7 @@ jobs:
 
       - name: install dependencies
         if: ${{ env.PR_TYPE != 'closed' }}
-        run: pnpm i
+        run: pnpm i --no-frozen-lockfile=${PR_UPDATE_DEPS}
 
       - name: build docs
         if: ${{ env.PR_TYPE != 'closed' }}
@@ -68,6 +76,7 @@ jobs:
         if: ${{ env.PR_TYPE != 'closed' }}
         run: |
           git clean -ffdx
+          git reset --hard
           git checkout gh-pages
           git pull
           echo "Deploying PR: ${PR_TITLE} to ${DEPLOY_PATH}"
@@ -80,10 +89,18 @@ jobs:
         env:
           DEPLOY_PATH: ${{ steps.init_environment.outputs.deploy_path }}
 
+      - name: patch update
+        if: ${{ env.PR_TYPE == 'closed' && github.event.pull_request.merged }}
+        run: |
+          git add pnpm-lock.yaml
+          git commit -m "update pnpm-lock.yaml"
+          git push
+
       - name: clean preview docs
         if: ${{ env.PR_TYPE == 'closed' }}
         run: |
           git clean -ffdx
+          git reset --hard
           git checkout gh-pages
           git pull
           rm -rf ${DEPLOY_PATH}
