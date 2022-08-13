@@ -50,7 +50,6 @@ jobs:
         if: ${{ contains(github.event.pull_request.labels.*.name, 'dependencies') }}
         run: |
           echo labels contains dependencies
-          echo $HEAD_REF
 
       - id: init_environment
         run: |
