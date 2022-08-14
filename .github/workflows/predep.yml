@@ -5,6 +5,8 @@ on:
     branches: ["master"]
     types: ["opened"]
 
+permissions: write-all
+
 jobs:
   deployment:
     runs-on: ubuntu-latest
@@ -20,7 +22,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          token: ${{ secrets.DEPENDENCIES_TOKEN }}
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
