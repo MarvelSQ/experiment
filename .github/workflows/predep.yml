@@ -11,7 +11,6 @@ jobs:
   deployment:
     runs-on: ubuntu-latest
     env:
-      PR_UPDATE_DEPS: ${{ contains(github.event.pull_request.labels.*.name, 'dependencies') }}
       HEAD_REF: ${{ github.event.pull_request.head.ref }}
 
     strategy:
@@ -34,12 +33,12 @@ jobs:
           version: 7.x
 
       - name: Condition Step
-        if: ${{ contains(github.event.pull_request.labels.*.name, 'dependencies') }}
+        if: ${{ github.actor == 'dependabot[bot]' }}
         run: |
           echo labels contains dependencies
 
       - name: update dependencies
-        if: ${{ contains(github.event.pull_request.labels.*.name, 'dependencies') }}
+        if: ${{ github.actor == 'dependabot[bot]' }}
         run: |
           pnpm i --no-frozen-lockfile
           git config user.name action
