@@ -1,8 +1,8 @@
-console.log("this is a experiment module");
+console.log('this is a experiment module');
 
 // this comment is new
 export default {
-  name: "Experiment",
+  name: 'Experiment',
   version: '0.0.4',
-  something: "this is a update"
+  something: 'this is a update',
 };
