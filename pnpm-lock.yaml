@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@vitest/coverage-c8': ^0.22.1
-  date-fns: ^2.29.2
+  date-fns: ^2.29.3
   typescript: ^4.7.4
   vite: ^3.0.9
   vite-plugin-html: ^3.2.0
@@ -10,7 +10,7 @@ specifiers:
 
 devDependencies:
   '@vitest/coverage-c8': 0.22.1
-  date-fns: 2.29.2
+  date-fns: 2.29.3
   typescript: 4.7.4
   vite: 3.0.9
   vite-plugin-html: 3.2.0_vite@3.0.9
@@ -320,8 +320,8 @@ packages:
     engines: {node: '>= 6'}
     dev: true
 
-  /date-fns/2.29.2:
-    resolution: {integrity: sha512-0VNbwmWJDS/G3ySwFSJA3ayhbURMTJLtwM2DTxf9CWondCnh6DTNlO9JgRSq6ibf4eD0lfMJNBxUdEAHHix+bA==}
+  /date-fns/2.29.3:
+    resolution: {integrity: sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA==}
     engines: {node: '>=0.11'}
     dev: true
 
